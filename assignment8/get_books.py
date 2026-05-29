@@ -1,61 +1,84 @@
-import time
-import pandas as pd
+import os
 import json
+import time
+
+import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
 
 URL = "https://durhamcounty.bibliocommons.com/v2/search?query=learning+spanish&searchType=smart"
 
-def _safe_text(element, class_name):
-    try:
-        return element.find_element(By.CLASS_NAME, class_name).text.strip()
-    except Exception:
-        return "N/A"
 
-def _join_authors(author_elements):
-    authors = [a.text.strip() for a in author_elements if a.text.strip()]
-    return "; ".join(authors) if authors else "N/A"
+def chromedriver_path():
+    path = ChromeDriverManager().install()
+    if os.path.basename(path) != "chromedriver":
+        path = os.path.join(os.path.dirname(path), "chromedriver")
+    os.chmod(path, 0o755)
+    return path
 
-def get_books():
+
+def make_driver():
     options = Options()
-    options.add_argument("--headless")
+    options.add_argument("--headless=new")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    driver = webdriver.Chrome(options=options)
+    return webdriver.Chrome(service=Service(chromedriver_path()), options=options)
+
+
+def text_or_na(element, by, value):
+    found = element.find_elements(by, value)
+    return found[0].text.strip() if found and found[0].text.strip() else "N/A"
+
+
+def get_books():
+    driver = make_driver()
     try:
         driver.get(URL)
-        WebDriverWait(driver, 15).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "cp-search-result-item"))
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located(
+                (By.XPATH, "//li[contains(@class,'cp-search-result-item')]")
+            )
         )
         time.sleep(2)
-        li_elements = driver.find_elements(By.XPATH, "//li[contains(@class,'cp-search-result-item')]")
-        print(f"Found {len(li_elements)} results")
+
+        items = driver.find_elements(
+            By.XPATH, "//li[contains(@class,'cp-search-result-item')]"
+        )
+        print(f"Found {len(items)} results")
+
         results = []
-        for item in li_elements:
-            title = _safe_text(item, "title-content")
+        for item in items:
+            title = text_or_na(item, By.CLASS_NAME, "title-content")
+
             author_els = item.find_elements(By.CLASS_NAME, "author-link")
-            author = _join_authors(author_els)
-            fmt = _safe_text(item, "cp-format-indicator")
-            year = _safe_text(item, "cp-publish-year")
-            parts = [p for p in (fmt, year) if p != "N/A"]
-            format_year = " ".join(parts) if parts else "N/A"
+            authors = [a.text.strip() for a in author_els if a.text.strip()]
+            author = "; ".join(authors) if authors else "N/A"
+
+            fmt_blocks = item.find_elements(By.CSS_SELECTOR,
+                                            "div.cp-format-info span.display-info-primary")
+            format_year = fmt_blocks[0].text.strip() if fmt_blocks else "N/A"
+
             results.append({"Title": title, "Author": author, "Format-Year": format_year})
         return results
     finally:
         driver.quit()
 
+
 if __name__ == "__main__":
     results = get_books()
+
     df = pd.DataFrame(results)
     print(df.to_string(index=False))
     print(f"\nTotal results: {len(df)}")
-    
+
     df.to_csv("get_books.csv", index=False)
     print("Written: get_books.csv")
-    
+
     with open("get_books.json", "w") as f:
         json.dump(results, f, indent=2)
     print("Written: get_books.json")

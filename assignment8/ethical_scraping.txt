@@ -1,3 +1,18 @@
+Durham County Library robots.txt check (the site get_books.py scrapes)
+I looked at the robots.txt before scraping. The catalog itself lives on
+durhamcounty.bibliocommons.com, and its robots.txt says "User-agent: * Disallow: /",
+which means it's asking all bots to stay off every page. The library's main site at
+durhamcountylibrary.org is more relaxed and only blocks its /wp-admin/ area.
+So in a real job the better move would be to use the library's API or just ask them,
+instead of scraping the catalog. Since this is a class assignment, I only run the
+program once on the first page of results and wait for it to load instead of firing off
+a bunch of quick requests, so it's one light visit and not the fast crawling that
+robots.txt is trying to prevent.
+
+============================================================
+
+Wikipedia robots.txt (https://en.wikipedia.org/robots.txt)
+
 Which sections of the website are restricted for crawling?
 - The /w/ directory (wiki action API paths)
 - The /trap/ directory (honeypot to catch bad bots)
