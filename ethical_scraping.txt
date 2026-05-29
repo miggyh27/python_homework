@@ -1,0 +1,85 @@
+Durham County Library robots.txt check (the site get_books.py scrapes)
+I looked at the robots.txt before scraping. The catalog itself lives on
+durhamcounty.bibliocommons.com, and its robots.txt says "User-agent: * Disallow: /",
+which means it's asking all bots to stay off every page. The library's main site at
+durhamcountylibrary.org is more relaxed and only blocks its /wp-admin/ area.
+So in a real job the better move would be to use the library's API or just ask them,
+instead of scraping the catalog. Since this is a class assignment, I only run the
+program once on the first page of results and wait for it to load instead of firing off
+a bunch of quick requests, so it's one light visit and not the fast crawling that
+robots.txt is trying to prevent.
+
+============================================================
+
+Wikipedia robots.txt (https://en.wikipedia.org/robots.txt)
+
+Which sections of the website are restricted for crawling?
+- The /w/ directory (wiki action API paths)
+- The /trap/ directory (honeypot to catch bad bots)
+- Special pages (Special:, Spezial:, Spesial: in multiple languages and encodings)
+- Administrative and deletion-related pages including:
+  - Wikipedia:Löschkandidaten (deletion candidates)
+  - Wikipedia:Vandalensperrung (vandalism blocking)
+  - Wikipedia:Benutzersperrung (user blocking)
+  - Wikipedia:Vermittlungsausschuss (mediation committee)
+  - Wikipedia:Administratoren/Probleme (admin problems)
+  - Wikipedia:Adminkandidaturen (admin candidates)
+  - Wikipedia:Qualitätssicherung (quality assurance)
+  - Wikipedia:Vandalismusmeldung (vandalism reports)
+  - Wikipedia:Gesperrte_Lemmata (blocked articles)
+  - Wikipedia:Löschprüfung (deletion review)
+  - Wikipedia:Administratoren/Notizen (admin notes)
+  - Wikipedia:Schiedsgericht/Anfragen (arbitration requests)
+  - Wikipedia:Checkuser (checkuser pages)
+  - Wikipedia:Spam-Blacklist-Log (spam blacklist log)
+  - Wikipedia:Articles_for_deletion (articles for deletion)
+  - Wikipedia:Votes_for_deletion (votes for deletion)
+  - Wikipedia:Pages_for_deletion (pages for deletion)
+  - Wikipedia:Miscellany_for_deletion (miscellany for deletion)
+  - Wikipedia:Copyright_problems (copyright problems)
+  - Wikipedia:Protected_titles (protected titles)
+  - Wikipedia:WikiProject_Spam (wiki project spam)
+  - MediaWiki:Spam-blacklist (spam blacklist)
+  - Wikipedia:Requests_for_arbitration (requests for arbitration)
+  - Wikipedia:Requests_for_comment (requests for comment)
+  - Wikipedia:Requests_for_adminship (requests for adminship)
+
+Are there specific rules for certain user agents?
+Yes, many specific user agents have their own rules:
+- MJ12bot: Disallow / (completely blocked)
+- Mediapartners-Google*: Disallow / (advertising bots blocked)
+- IsraBot: Disallow (empty, meaning no restrictions)
+- Orthogaffe: Disallow (empty, meaning no restrictions)
+- UbiCrawler: Disallow / (blocked)
+- DOC: Disallow / (blocked)
+- Zao: Disallow / (blocked)
+- sitecheck.internetseer.com: Disallow / (blocked)
+- Zealbot: Disallow / (blocked)
+- MSIECrawler: Disallow / (blocked)
+- SiteSnagger: Disallow / (blocked)
+- WebStripper: Disallow / (blocked)
+- WebCopier: Disallow / (blocked)
+- Fetch: Disallow / (blocked)
+- Offline Explorer: Disallow / (blocked)
+- Teleport: Disallow / (blocked)
+- TeleportPro: Disallow / (blocked)
+- WebZIP: Disallow / (blocked)
+- linko: Disallow / (blocked)
+- HTTrack: Disallow / (blocked)
+- Microsoft.URL.Control: Disallow / (blocked)
+- Xenu: Disallow / (blocked)
+- larbin: Disallow / (blocked)
+- libwww: Disallow / (blocked)
+- ZyBORG: Disallow / (blocked)
+- Download Ninja: Disallow / (blocked)
+- fast: Disallow / (blocked - misbehaving, requests too fast)
+- wget: Disallow / (blocked)
+- grub-client: Disallow / (blocked - very poorly behaved)
+- k2spider: Disallow / (blocked)
+- NPBot: Disallow / (blocked)
+- WebReaper: Disallow / (blocked)
+- SemrushBot: Crawl-delay: 5 (allowed but with delay)
+- User-agent: * (default rules apply to all other bots)
+
+Reflection on why websites use robots.txt:
+Websites use robots.txt to communicate crawling policies to automated bots, protecting server resources and sensitive content while allowing legitimate indexing. This promotes ethical scraping by providing clear guidelines that responsible scrapers should follow to avoid overloading servers or accessing restricted areas. Respecting robots.txt ensures that automated access does not degrade the experience for human users or violate the site's terms of service.
