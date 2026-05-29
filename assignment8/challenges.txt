@@ -1,0 +1,28 @@
+Challenges I ran into
+
+Getting ChromeDriver to start
+webdriver_manager was supposed to hand me the path to chromedriver, but it kept giving
+me a path to the wrong file in that folder (the license notice file), so the driver
+wouldn't start. I still call ChromeDriverManager().install() like we were told, but I
+added a couple lines that just point it at the real chromedriver file next to it and
+make sure it's executable. After that it ran fine.
+
+Finding the right classes on the library site
+The catalog loads its results with JavaScript, so I had to wait for the list to show up
+before grabbing anything. The title and author classes worked, but my first guess for
+the format and year was wrong, so that column came out as "N/A" for every book. I opened
+the page in dev tools and dug through the divs until I found the real spot, which was a
+span inside the format div with text like "eAudiobook, 2025". Once I used that, it
+worked.
+
+The OWASP page had changed
+The page doesn't list the ten risks right on it anymore, it just links out to the
+newest version. So I have the program click into that link first, then grab the A01
+through A10 links on that page with XPath. I used a little regex to skip the intro and
+"next steps" links that look similar. I also made it stop with an error if it doesn't
+find exactly ten, so it can't quietly save the wrong stuff.
+
+Checking robots.txt
+Before scraping I looked at the library catalog's robots.txt and it actually asks bots
+not to crawl any of it. I wrote that down in ethical_scraping.txt and kept my program to
+one slow request on a single page so I'm not abusing the site.
