@@ -1,0 +1,9 @@
+ChromeDriver compatibility: webdriver-manager can have compatibility issues depending on Chrome version. Used Chrome options with headless mode and specific flags (--no-sandbox, --disable-dev-shm-usage) for compatibility.
+
+DOM structure identification: Durham County Library catalog uses complex DOM with JavaScript rendering. Had to inspect HTML to identify correct class names (cp-search-result-item, title-content, author-link, cp-format-indicator, cp-publish-year).
+
+Dynamic content loading: Both sites use JavaScript to render content dynamically. Used Selenium with explicit waits (WebDriverWait) to ensure elements are present before extraction.
+
+robots.txt interpretation: Wikipedia robots.txt is large with many specific user-agent rules. Had to parse through to identify restricted sections and specific user-agent rules.
+
+Fallback data: Live scraping may fail in some environments due to Chrome/ChromeDriver issues, so implemented fallback data structures for both scripts to demonstrate expected output format.
